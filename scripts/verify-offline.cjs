@@ -1,7 +1,7 @@
 const fs=require('fs'),vm=require('vm'),assert=require('node:assert/strict');
 const origin='https://test.invalid', handlers={},stored=new Map(),deleted=[],names=new Set(['massa-facil-obsoleto','outra-aplicacao']);
-const cache={async addAll(paths){for(const p of paths){const f=p==='./'?'docs/index.html':'docs/'+p.slice(2);assert.ok(fs.existsSync(f),`Falta ${f}`);stored.set(new URL(p,origin+'/').href,{ok:true,file:f});}},async match(request){return stored.get(new URL(typeof request==='string'?request:request.url,origin+'/').href.split('?')[0]);}};
-const context={URL,caches:{async open(name){names.add(name);return cache;},async keys(){return [...names];},async delete(n){deleted.push(n);names.delete(n);}},self:{location:{origin},clients:{async claim(){}},async skipWaiting(){},addEventListener(n,fn){handlers[n]=fn;}},fetch:async()=>{throw Error('Rede indisponível');}};
+const cache={async addAll(paths){for(const request of paths){assert.equal(request.cache,'reload');const p='.'+new URL(request.url).pathname;const f=p==='./'?'docs/index.html':'docs/'+p.slice(2);assert.ok(fs.existsSync(f),`Falta ${f}`);stored.set(new URL(p,origin+'/').href,{ok:true,file:f});}},async match(request){return stored.get(new URL(typeof request==='string'?request:request.url,origin+'/').href.split('?')[0]);}};
+const context={URL,Request,caches:{async open(name){names.add(name);return cache;},async keys(){return [...names];},async delete(n){deleted.push(n);names.delete(n);}},self:{location:{origin,href:origin+'/sw.js'},clients:{async claim(){}},async skipWaiting(){},addEventListener(n,fn){handlers[n]=fn;}},fetch:async()=>{throw Error('Rede indisponível');}};
 vm.runInNewContext(fs.readFileSync('docs/sw.js','utf8'),context);
 (async()=>{
  let pending;handlers.install({waitUntil:p=>pending=p});await pending;

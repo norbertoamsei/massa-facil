@@ -56,16 +56,23 @@ $('close-install').addEventListener('click',()=>{$('install-guide').hidden=true;
 function installed(){return matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;}
 if(installed())$('install-button').hidden=true;
 window.addEventListener('appinstalled',()=>{$('install-button').hidden=true;$('install-guide').hidden=true;});
+$('update-button').addEventListener('click',()=>location.reload());
 async function prepareOffline(){
  if(!('serviceWorker' in navigator)){message('offline-status','Use um navegador atualizado para ativar o modo offline.');return;}
  try{
+  const alreadyControlled=!!navigator.serviceWorker.controller;
+  navigator.serviceWorker.addEventListener('controllerchange',()=>{
+   if(alreadyControlled){$('update-button').hidden=false;message('offline-status','Nova versão disponível. Toque em Atualizar aplicativo.');}
+  });
   const registration=await navigator.serviceWorker.register('./sw.js',{scope:'./',updateViaCache:'none'});
   const ready=await Promise.race([navigator.serviceWorker.ready,new Promise(resolve=>setTimeout(()=>resolve(null),10000))]);
   if(!ready?.active)throw new Error('Modo offline ainda indisponível');
   const channel=new MessageChannel();
   const state=await new Promise(resolve=>{const timer=setTimeout(()=>resolve(false),6000);channel.port1.onmessage=e=>{clearTimeout(timer);resolve(e.data?.offlineReady===true);};ready.active.postMessage({type:'CHECK_OFFLINE'},[channel.port2]);});
   message('offline-status',state?'Pronto para usar offline':'Conecte-se à internet e reabra para preparar o modo offline.');
-  registration.addEventListener('updatefound',()=>{const worker=registration.installing;worker?.addEventListener('statechange',()=>{if(worker.state==='activated')message('offline-status','Pronto para usar offline');});});
+  document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&navigator.onLine)void registration.update().catch(()=>{});});
+  void registration.update().catch(()=>{});
+  registration.addEventListener('updatefound',()=>{const worker=registration.installing;worker?.addEventListener('statechange',()=>{if(worker.state==='activated'&&!alreadyControlled)message('offline-status','Pronto para usar offline');});});
  }catch{message('offline-status','O cálculo funciona. Reabra com internet para preparar o modo offline.');}
 }
 render();void prepareOffline();
