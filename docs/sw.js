@@ -1,5 +1,5 @@
 'use strict';
-const CACHE='massa-facil-v1';
+const CACHE='massa-facil-v2';
 const ASSETS=['./','./index.html','./styles.css','./chemistry.js','./app.js','./manifest.webmanifest','./icons/icon-192.png','./icons/icon-512.png','./icons/maskable-512.png','./icons/apple-touch-icon.png'];
 self.addEventListener('install',event=>event.waitUntil((async()=>{const cache=await caches.open(CACHE);await cache.addAll(ASSETS);await self.skipWaiting();})()));
 self.addEventListener('activate',event=>event.waitUntil((async()=>{const names=await caches.keys();await Promise.all(names.filter(name=>name.startsWith('massa-facil-')&&name!==CACHE).map(name=>caches.delete(name)));await self.clients.claim();})()));
