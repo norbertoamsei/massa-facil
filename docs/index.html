@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#102c2b"><meta name="description" content="Calcule massa molecular e massa molar pela fórmula química. Sem cadastro, com detalhamento por elemento e uso offline após o primeiro acesso.">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Massa Fácil"><meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>Massa Fácil — Calculadora química</title>
+<link rel="manifest" href="./manifest.webmanifest"><link rel="apple-touch-icon" href="./icons/apple-touch-icon.png"><link rel="icon" href="./icons/icon-192.png"><link rel="stylesheet" href="./styles.css">
+<script src="./chemistry.js" defer></script><script src="./app.js" defer></script>
+</head>
+<body>
+<main>
+<header><div class="brand"><span class="mark" aria-hidden="true">M</span><div><h1>Massa Fácil</h1><p>Massa molecular e massa molar</p></div></div><button class="icon-button" id="help-button" aria-expanded="false" aria-controls="help" aria-label="Mostrar ajuda">?</button></header>
+<div class="install-strip"><p id="offline-status" role="status">Preparando o uso offline…</p><button id="install-button" class="text-button" type="button">Instalar no celular</button></div>
+<section id="install-guide" class="panel guide" hidden aria-labelledby="install-heading"><div class="section-heading"><h2 id="install-heading">Adicione à tela inicial</h2><button class="text-button" id="close-install">Fechar</button></div><p><strong>Android:</strong> no Chrome, abra o menu ⋮ e escolha “Instalar aplicativo” ou “Adicionar à tela inicial”.</p><p><strong>iPhone:</strong> abra este link no Safari, toque em Compartilhar e depois em “Adicionar à Tela de Início”. Se aparecer, ative “Abrir como App da Web”.</p><p>Se abriu o link dentro do WhatsApp ou de outra rede social, abra-o no navegador do celular para instalar.</p><p>Para usar sem internet, aguarde a mensagem “Pronto para usar offline” antes de fechar.</p></section>
+<div class="workspace">
+<div class="entry-column">
+<section class="panel" aria-labelledby="entry-heading"><h2 id="entry-heading">Digite a fórmula química</h2><form id="calculator" novalidate><label for="formula" class="sr-only">Fórmula química</label><input id="formula" name="formula" type="text" value="H₂O" placeholder="Ex.: Al₂(SO₄)₃" autocomplete="off" autocapitalize="off" spellcheck="false" maxlength="300" aria-describedby="formula-hint error"><div class="keys" aria-label="Símbolos da fórmula"><button type="button" data-insert="(">(</button><button type="button" data-insert=")">)</button><button type="button" data-insert="[">[</button><button type="button" data-insert="]">]</button><button type="button" data-insert="·" aria-label="Ponto médio para hidratação">·</button><button type="button" id="clear">Limpar</button></div><p class="hint" id="formula-hint">Digite números comuns: os índices viram subscritos. Em CuSO₄·5H₂O, o 5 permanece normal.</p><button class="primary" type="submit">Calcular massa</button><p id="error" class="error" role="alert" hidden></p></form></section>
+<section class="examples-section" aria-labelledby="examples-heading"><h2 id="examples-heading">Experimente</h2><div class="chips" id="examples"></div></section>
+<section id="history-section" hidden aria-labelledby="history-heading"><div class="section-heading"><h2 id="history-heading">Nesta sessão</h2><button class="text-button" id="clear-history">Apagar histórico</button></div><div class="chips" id="history"></div><p class="hint">O histórico é apagado ao encerrar o aplicativo.</p></section>
+</div>
+<div class="result-column">
+<section id="result-area" aria-live="polite" aria-label="Resultado do cálculo">
+<div class="result-card"><div class="result-heading"><span class="eyebrow">RESULTADO</span><strong id="pretty-formula">H₂O</strong></div><p class="mass"><span id="mass">18,015</span> <span class="unit">u</span></p><p class="result-description">Massa molecular ou da unidade de fórmula</p><div class="molar-row"><span>Massa molar</span><strong id="molar">18,015 g/mol</strong></div><p class="atom-count" id="atom-count">2 elementos · 3 átomos por unidade de fórmula</p></div>
+<div class="section-heading breakdown-heading"><h2>Elemento por elemento</h2><div class="precision" role="group" aria-label="Casas decimais"><button data-precision="2" aria-label="2 casas decimais" aria-pressed="false">2</button><button data-precision="3" aria-label="3 casas decimais" aria-pressed="true">3</button><button data-precision="4" aria-label="4 casas decimais" aria-pressed="false">4</button></div></div>
+<div class="panel breakdown"><div id="rows"></div><div class="total"><span>Soma das contribuições</span><strong id="total">18,015 u</strong></div></div><p class="hint">Valores aproximados. Mais casas decimais não significam maior precisão científica.</p><button class="secondary share" id="share">Compartilhar resultado</button><p id="notice" class="hint" role="status" hidden></p>
+</section>
+<div class="empty" id="empty" hidden><h2>Seu próximo cálculo</h2><p>Digite uma fórmula e toque em “Calcular massa” para ver o resultado.</p></div>
+</div>
+</div>
+<section class="panel help" id="help" hidden aria-labelledby="help-heading"><h2 id="help-heading">Como usar</h2><p>Use símbolos com maiúsculas e minúsculas: <strong>Co</strong> é cobalto; <strong>CO</strong> é carbono e oxigênio.</p><p>Parênteses e colchetes são aceitos: Ca(OH)₂ e K₄[Fe(CN)₆]. Para hidratos, use o ponto médio: CuSO₄·5H₂O.</p><p>A massa molecular é expressa em <strong>u</strong>. Para compostos iônicos, como NaCl, o resultado corresponde à massa da unidade de fórmula. A massa molar é expressa em <strong>g/mol</strong> e tem o mesmo valor numérico na aproximação utilizada.</p><p>Não inclua coeficiente no início, carga elétrica, estado físico ou isótopo. A calculadora interpreta a fórmula; não confirma se a substância existe.</p><p>Referência: valores centrais das massas atômicas abreviadas da CIAAW, tabela 2024. As incertezas não são propagadas. Elementos sem massa atômica padrão não são calculados.</p><a href="https://www.ciaaw.org/abridged-atomic-weights.htm" target="_blank" rel="noopener noreferrer">Consultar a tabela CIAAW</a></section>
+<footer>Sem cadastro. Sem anúncios. Os cálculos são feitos no seu aparelho.<br>Massa Fácil · referência CIAAW 2024</footer>
+</main>
+<noscript>Ative o JavaScript no navegador para usar a calculadora.</noscript>
+</body>
+</html>
